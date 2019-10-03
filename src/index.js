@@ -1,101 +1,93 @@
-import 'dotenv/config';
+// const dotenv = require("dotenv"); 
+import dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
-import uuidv4 from 'uuid/v4';
+// import uuidv4 from 'uuid/v4';
+import mongoose from 'mongoose';
 
 const app = express();
+const listRoutes = express.Router();
+
+dotenv.config();
+
+const PORT = process.env.PORT || 4000;
+// const URI_lists = process.env.DB_URI;
+const URI_lists = 'mongodb://localhost:27017/lists';
+
+let List = require('./models/task');
 
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({
     extended: true
 }));
-app.use((req, res, next) => {
-    req.me = users[1];
-    next();
+
+mongoose.connect(URI_lists, 
+                {useNewUrlParser: true,
+                 useUnifiedTopology: true},
+                )
+        .then(() => {
+            console.log("MongoDB database initial connection established successfully.");
+        })
+        .catch((err) => {
+            console.log("ERROR! Could not connect to Database!");
+            console.log(err);
+        });
+
+const connection = mongoose.connection;
+connection.on('disconnected',()=> {console.log('lost connection!')});
+connection.on('reconnected',()=> {console.log('reconnected to db again!')});
+        
+
+listRoutes.route('/').get(function(req, res) {
+    List.find(function(err, lists) {
+        if (err) {
+            console.log(err);
+        } else {
+            res.json(lists);
+        }
+    });
 });
 
-let users = {
-    1: {
-        id: '1',
-        username: 'Robin Wieruch',
-    },
-    2: {
-        id: '2',
-        username: 'Dave Davids',
-    },
-};
-let messages = {
-    1: {
-        id: '1',
-        text: 'Hello World',
-        userId: '1',
-    },
-    2: {
-        id: '2',
-        text: 'By World',
-        userId: '2',
-    },
-};
-
-app.get('/', (req, res) => {
-    return res.send('Received a GET HTTP method');
-});
-app.post('/', (req, res) => {
-    return res.send('Received a POST HTTP method');
-});
-app.put('/', (req, res) => {
-    return res.send('Received a PUT HTTP method');
-});
-app.delete('/', (req, res) => {
-    return res.send('Received a DELETE HTTP method');
+listRoutes.route('/:id').get(function(req, res) {
+    let id = req.params.id;
+    List.findById(id, function(err, list) {
+        res.json(list);
+    });
 });
 
-app.get('/users', (req, res) => {
-    return res.send(Object.values(users));
+listRoutes.route('/update/:id').post(function(req, res) {
+    List.findById(req.params.id, function(err, list) {
+        if (!list)
+            res.status(404).send("data is not found");
+        else
+            list.list_item = req.body.list_item;
+            list.list_status = req.body.list_status;
+            list.list_due = req.body.list_due;
+            list.list_created = req.body.list_created;
+
+            list.save().then(list => {
+                res.json('List item updated!');
+            })
+            .catch(err => {
+                res.status(400).send("Update not possible");
+            });
+    });
 });
 
-app.get('/users/:userId', (req, res) => {
-    return res.send(users[req.params.userId]);
+listRoutes.route('/add').post(function(req, res) {
+    let newitem = new List(req.body);
+    newitem.save()
+        .then(list => {
+            res.status(200).json({'list': 'list item added successfully'});
+        })
+        .catch(err => {
+            res.status(400).send('adding new list item failed');
+        });
 });
 
-app.post('/users', (req, res) => {
-    return res.send('POST HTTP method on user resource');
-});
+app.use('/lists', listRoutes);
 
-app.delete('/users/:userId', (req, res) => {
-    return res.send(
-        `DELETE HTTP method on user/${req.params.userId} resource`,
-    );
+app.listen( PORT, () => { 
+    console.log('Server is running on Port: ' + PORT);
 });
-
-app.get('/messages', (req, res) => {
-    return res.send(Object.values(messages));
-});
-app.get('/messages/:messageId', (req, res) => {
-    return res.send(messages[req.params.messageId]);
-});
-
-app.post('/messages', (req, res) => {
-    const id = uuidv4();
-    const message = {
-        id,
-        text: req.body.text,
-    };
-    messages[id] = message;
-    return res.send(message);
-});
-
-app.delete('/messages/:messageId', (req, res) => {
-    const {
-        [req.params.messageId]: message,
-        ...otherMessages
-    } = messages;
-    messages = otherMessages;
-    return res.send(message);
-});
-
-
-app.listen(process.env.PORT, () =>
-    console.log('Example app listening on port 3000!'),
-);
