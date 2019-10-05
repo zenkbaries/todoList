@@ -11,7 +11,6 @@ const listRoutes = express.Router();
 dotenv.config();
 
 const PORT = process.env.PORT || 4000;
-// const URI_lists = process.env.DB_URI;
 const URI_lists = 'mongodb://localhost:27017/lists';
 
 let List = require('./models/task');
