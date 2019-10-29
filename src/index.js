@@ -85,6 +85,26 @@ listRoutes.route('/add').post(function(req, res) {
         });
 });
 
+listRoutes.route('/complete/:id').post(function(req, res) {
+    List.findById(req.params.id, function(err, list) {
+        if (!list)
+            res.status(404).send("data is not found");
+        else
+            list.list_complete = req.body.list_complete;
+            list.list_item = req.body.list_item;
+            list.list_status = req.body.list_status;
+            list.list_due = req.body.list_due;
+            list.list_created = req.body.list_created;
+
+            list.save().then(list => {
+                res.json('List item updated!');
+            })
+            .catch(err => {
+                res.status(400).send("Update not possible");
+            });
+    });
+});
+
 app.use('/lists', listRoutes);
 
 app.listen( PORT, () => { 
