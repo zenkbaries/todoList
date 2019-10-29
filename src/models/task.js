@@ -2,6 +2,11 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const listSchema = new Schema({
+    list_complete: {
+        type: Boolean,
+        required: false,
+        default: false
+    },
     list_item: {
         type: String,
         required: true
