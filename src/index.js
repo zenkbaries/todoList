@@ -12,7 +12,7 @@ const app = express();
 dotenv.config();
 
 const PORT = process.env.PORT || 4000;
-const URI_lists = 'mongodb://localhost:27017/lists';
+// const URI_lists = 'mongodb://localhost:27017/lists';
 
 let List = require('./api/models/task');
 
@@ -22,7 +22,7 @@ app.use(express.urlencoded({
     extended: true
 }));
 
-mongoose.connect(URI_lists ||"mongodb://localhost:27017/lists", 
+mongoose.connect(process.env.DB_URI_LOCAL ||"mongodb://localhost:27017/lists", 
                 {useNewUrlParser: true,
                  useUnifiedTopology: true},
                 )
