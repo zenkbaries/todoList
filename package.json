@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon --exec babel-node src/index.js && react-scripts start",
+    "start": "node --exec babel-node src/index.js && react-scripts start",
     "heroku-postbuild": "cd client && npm install --only=dev && npm install && npm run build",
     "startOld": "nodemon --exec babel-node src/index_org.js",
     "test": "echo \"Error: no test specified\" && exit 1"
