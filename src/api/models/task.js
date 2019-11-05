@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const listSchema = new Schema({
     list_complete: {
         type: Boolean,
-        required: false,
+        required: true,
         default: false
     },
     list_item: {
