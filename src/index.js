@@ -22,7 +22,7 @@ app.use(express.urlencoded({
     extended: true
 }));
 
-mongoose.connect(URI_lists, 
+mongoose.connect(URI_lists ||"mongodb://localhost:27017/lists", 
                 {useNewUrlParser: true,
                  useUnifiedTopology: true},
                 )
