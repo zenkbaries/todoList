@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node --exec babel-node src/index.js && react-scripts start",
+    "start-local": "nodemon --exec babel-node src/index.js",
     "heroku-postbuild": "cd client && npm install --only=dev && npm install && npm run build",
     "startOld": "nodemon --exec babel-node src/index_org.js",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -31,6 +32,6 @@
     "uuid": "^3.3.3"
   },
   "engines": {
-      "node": "12.4.0"
+    "node": "12.4.0"
   }
 }
