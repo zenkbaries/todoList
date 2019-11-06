@@ -43,7 +43,7 @@ connection.on('reconnected',()=> {console.log('reconnected to db again!')});
 app.use('/lists', listRoutes);
 
 app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "client", "build", "index.html"));
+    res.sendFile(path.join(__dirname, "../client", "build", "index.html"));
 });
 
 
