@@ -5,6 +5,7 @@ import cors from 'cors';
 // import uuidv4 from 'uuid/v4';
 import mongoose from 'mongoose';
 import listRoutes from './api/listRoute';
+const path = require("path");
 
 const app = express();
 // const listRoutes = express.Router();
@@ -21,6 +22,7 @@ app.use(express.json());
 app.use(express.urlencoded({
     extended: true
 }));
+app.use(express.static(path.join(__dirname, "client", "build")))
 
 mongoose.connect(process.env.DB_URI_LOCAL ||"mongodb://localhost:27017/lists", 
                 {useNewUrlParser: true,
@@ -39,6 +41,11 @@ connection.on('disconnected',()=> {console.log('lost connection!')});
 connection.on('reconnected',()=> {console.log('reconnected to db again!')});
 
 app.use('/lists', listRoutes);
+
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "client", "build", "index.html"));
+});
+
 
 app.listen( PORT, () => { 
     console.log('Server is running on Port: ' + PORT);
