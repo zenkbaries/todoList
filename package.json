@@ -5,12 +5,12 @@
   "main": "index.js",
   "scripts": {
     "start": "npm install && node index.js",
-    "start-local": "nodemon --exec babel-node src/index.js",
     "build": "npm run clean && npm run build-babel",
     "heroku-postbuild": "cd client && npm install --only=dev && npm install && npm run build",
     "clean": "rm -rf build && mkdir build",
     "build-babel": "babel -d ./build ./src -s",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "local": "nodemon --exec babel-node src/index.js"
   },
   "keywords": [],
   "author": "John Towery <kbaries@gmail.com> (johntowery.work)",
