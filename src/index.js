@@ -22,7 +22,7 @@ app.use(express.json());
 app.use(express.urlencoded({
     extended: true
 }));
-app.use(express.static(path.join(__dirname, "client", "build")))
+app.use(express.static(path.join(__dirname, "../client/build")))
 
 mongoose.connect(process.env.DB_URI_REMOTE ||"mongodb://localhost:27017/lists", 
                 {useNewUrlParser: true,
