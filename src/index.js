@@ -1,5 +1,5 @@
-// const dotenv = require("dotenv"); 
-import dotenv from 'dotenv';
+const dotenv = require("dotenv"); 
+// import dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
 // import uuidv4 from 'uuid/v4';
